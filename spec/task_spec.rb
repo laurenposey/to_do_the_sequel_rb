@@ -2,6 +2,23 @@ require('spec_helper')
 
 describe(Task) do
 
+  it("tells which list it belongs to") do
+    test_list = List.create({:name => "list"})
+    test_task = Task.create({:description => "task", :list_id => test_list.id})
+    expect(test_task.list()).to(eq(test_list))
+  end
+
+  it("validates presence of desciption") do
+    task = Task.new({:description => ""})
+    expect(task.save()).to(eq(false))
+  end
+
+  it("ensures the length of description is at most 50 characters") do
+    task = Task.new({:description => "a".*(51)})
+    expect(task.save()).to(eq(false))
+  end
+
+
   describe(".not_done") do
     it("returns the not done tasks") do
       not_done_task1 = Task.create({:description => "gotta do it", :done => false})
@@ -12,11 +29,6 @@ describe(Task) do
     end
   end
 
-  describe('#list') do
-    it("tells which list it belongs to") do
-      test_list = List.create({:name => "list"})
-      test_task = Task.create({:description => "task", :list_id => test_list.id})
-      expect(test_task.list()).to(eq(test_list))
-    end
-  end
+
+
 end
